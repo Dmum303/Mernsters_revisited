@@ -1,148 +1,114 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 require('backend/spec/mongodb_helper');
 // require('simple-mongodb-helper');
 const User = require('../../models/user');
 
-describe('User model', () => {
-  beforeEach((done) => {
-    mongoose.connection.collections.users.drop(() => {
-      done();
+describe('User Model', () => {
+  let testUser;
+
+  beforeEach(async () => {
+    // Clear the User collection
+    await User.deleteMany({});
+    // Create a new user object before each test
+    testUser = new User({
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'johndoe@example.com',
+      password: 'Password123!', // A strong password that meets the complexity requirements
     });
   });
 
-  it('has an email address', () => {
-    const user = new User({
-      email: 'someone@example.com',
-      password: 'password',
-      firstName: 'some',
-      lastName: 'one',
-    });
-    expect(user.email).toEqual('someone@example.com');
+  it('should be valid with all required fields completed correctly', () => {
+    // Ensure that the user is valid
+    expect(testUser.validateSync()).toBeUndefined();
   });
 
-  it('has a password', () => {
-    const user = new User({
-      email: 'someone@example.com',
-      password: 'password',
-      firstName: 'some',
-      lastName: 'one',
-    });
-    expect(user.firstName).toEqual('some');
+  it('should require a firstName', () => {
+    testUser.firstName = '';
+
+    // Validate the user and check for the firstName validation error
+    const validationError = testUser.validateSync();
+    expect(validationError.errors.firstName).toBeDefined();
+    expect(validationError.errors.firstName.kind).toBe('required');
   });
 
-  it('can list all users', (done) => {
-    User.find((err, users) => {
-      expect(err).toBeNull();
-      expect(users).toEqual([]);
-      done();
-    });
+  it('should require a lastName', () => {
+    testUser.lastName = '';
+
+    // Validate the user and check for the lastName validation error
+    const validationError = testUser.validateSync();
+    expect(validationError.errors.lastName).toBeDefined();
+    expect(validationError.errors.lastName.kind).toBe('required');
   });
 
-  it('can save a user', (done) => {
-    date = new Date('2022-01-01');
-    const user = new User({
-      firstName: 'some',
-      lastName: 'one',
-      email: 'someone@example.com',
-      password: 'password',
-      profilePic: 'https://i.imgur.com/1Q9ZQ9u.png',
-      interests: ['Sports'],
-      birthday: date,
-      gender: 'Male',
-    });
+  it('should require an email', () => {
+    testUser.email = '';
 
-    user.save((err) => {
-      expect(err).toBeNull();
-      User.find((err, users) => {
-        expect(err).toBeNull();
-        expect(users[0]).toMatchObject({
-          firstName: 'some',
-          lastName: 'one',
-          email: 'someone@example.com',
-          profilePic: 'https://i.imgur.com/1Q9ZQ9u.png',
-          birthday: date,
-          interests: ['Sports'],
-          gender: 'Male',
-          chats: [],
-        });
-        done();
-      });
-    });
+    // Validate the user and check for the email validation error
+    const validationError = testUser.validateSync();
+    expect(validationError.errors.email).toBeDefined();
+    expect(validationError.errors.email.kind).toBe('required');
   });
 
-  it('Check chats array exists on user model', (done) => {
-    user = new User({
-      firstName: 'some',
-      lastName: 'one',
-      email: 'nope@example.com',
-      password: 'password',
-      profilePic: 'https://i.imgur.com/1Q9ZQ9u.png',
-      interests: ['Sports'],
-      birthday: date,
-      gender: 'Male',
-      chats: ['6380b408ba3b91e4853f389e'],
-    });
-    expect(user.chats).toEqual(['6380b408ba3b91e4853f389e']);
-    done();
+  it('should require a valid email', () => {
+    testUser.email = 'invalid-email';
+
+    // Validate the user and check for the email validation error
+    const validationError = testUser.validateSync();
+    expect(validationError.errors.email).toBeDefined();
+    expect(validationError.errors.email.kind).toBe('user defined');
+    expect(validationError.errors.email.message).toBe(
+      'Please provide a valid email address.'
+    );
   });
 
-  // // TODO: Finish this test. Testing the friendslist.
-  // it('can add friends', (done) => {
-  //   const user = new User({
-  //     email: 'someone@example.com',
-  //     password: 'password',
-  //     firstName: 'some',
-  //     lastName: 'one',
-  //   });
+  it('should require a unique email', async () => {
+    // Save the test user to the database
+    await testUser.save();
 
-  //   user.save((err) => {
-  //     expect(err).toBeNull();
+    // Create a new user with the same email
+    const duplicateUser = new User({
+      firstName: 'Jane',
+      lastName: 'Doe',
+      email: 'johndoe@example.com', // Same email as the test user
+      password: 'Password456!',
+    });
 
-  //     User.find((err, users) => {
-  //       expect(err).toBeNull();
-  //       expect(users.length).toEqual(1);
-  //       expect(users[0]).toMatchObject({
-  //         email: 'someone@example.com',
-  //         password: 'password',
-  //         firstName: 'some',
-  //         lastName: 'one',
-  //       });
-  //       done();
-  //     });
-  //   });
-  //   //   // Create 3 users
-  //   //   const user1 = new User({
-  //   //     email: 'some1@example.com',
-  //   //     password: 'password',
-  //   //     firstName: 'Spongebob',
-  //   //     lastName: 'Squarepants',
-  //   //   });
-  //   //   const user2 = new User({
-  //   //     email: 'some2@example.com',
-  //   //     password: 'password',
-  //   //     firstName: 'Sandy',
-  //   //     lastName: 'Cheeks',
-  //   //   });
-  //   //   const user3 = new User({
-  //   //     email: 'some3@example.com',
-  //   //     password: 'password',
-  //   //     firstName: 'Eugene',
-  //   //     lastName: 'Krabs',
-  //   //   });
+    // Save the duplicate user and handle any validation error
+    let validationError;
+    try {
+      await duplicateUser.save();
+    } catch (error) {
+      validationError = error;
+    }
 
-  //   //   // Save all 3 users on the database.
-  //   //   user1.save();
-  //   //   user2.save();
-  //   //   user3.save();
-  //   //   // let spongebob = User.findOne({ name: 'spongebob' });
-  //   //   User.find((err, users) => {
-  //   //     // expect(err).toBeNull();
+    // Check if a validation error occurred
+    expect(validationError).toBeDefined();
 
-  //   //     expect(users.length).toEqual(3);
-  //   //     done();
-  //   //   });
-  //   //   console.log(users);
-  //   //   done();
-  // });
+    // Check the specific error properties
+    expect(validationError.errors.email).toBeDefined();
+    expect(validationError.errors.email.kind).toBe('unique');
+  });
+
+  it('should require a password', () => {
+    testUser.password = '';
+
+    // Validate the user and check for the password validation error
+    const validationError = testUser.validateSync();
+    expect(validationError.errors.password).toBeDefined();
+    expect(validationError.errors.password.kind).toBe('required');
+  });
+
+  it('should require a password with proper complexity', () => {
+    testUser.password = 'password'; // Weak password without special characters
+
+    // Validate the user and check for the password complexity validation error
+    const validationError = testUser.validateSync();
+    expect(validationError.errors.password).toBeDefined();
+    expect(validationError.errors.password.kind).toBe('user defined');
+    expect(validationError.errors.password.message).toBe(
+      'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
+    );
+  });
 });

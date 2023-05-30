@@ -4,8 +4,33 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true, maxlength: 15 },
   lastName: { type: String, required: true, maxlength: 15 },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: function (value) {
+        // Email format validation
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        return emailRegex.test(value);
+      },
+      message: 'Please provide a valid email address.',
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        // Custom password complexity validation
+        const passwordRegex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(value);
+      },
+      message:
+        'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+    },
+  },
   profilePic: {
     type: String,
     default:
@@ -13,7 +38,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-//hashes and salts a password
+// Hashes and salts a password
 userSchema.pre('save', async function (next) {
   try {
     const user = this;
