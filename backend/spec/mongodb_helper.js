@@ -5,6 +5,7 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+  // Wait for Mongoose to build the unique index for User model
 });
 
 afterAll(async () => {

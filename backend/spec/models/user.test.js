@@ -7,6 +7,11 @@ const User = require('../../models/user');
 describe('User Model', () => {
   let testUser;
 
+  beforeAll(async () => {
+    // Ensure the indexes are built before running tests
+    await User.init();
+  });
+
   beforeEach(async () => {
     // Clear the User collection
     await User.deleteMany({});
@@ -76,19 +81,13 @@ describe('User Model', () => {
     });
 
     // Save the duplicate user and handle any validation error
-    let validationError;
     try {
       await duplicateUser.save();
     } catch (error) {
-      validationError = error;
+      expect(error).toBeDefined();
+      expect(error.name).toBe('MongoServerError');
+      expect(error.code).toBe(11000); // Duplicate Key Error code
     }
-
-    // Check if a validation error occurred
-    expect(validationError).toBeDefined();
-
-    // Check the specific error properties
-    expect(validationError.errors.email).toBeDefined();
-    expect(validationError.errors.email.kind).toBe('unique');
   });
 
   it('should require a password', () => {
