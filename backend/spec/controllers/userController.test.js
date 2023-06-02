@@ -17,7 +17,7 @@ describe('User Controller', () => {
 
   it('should create a new user', async () => {
     const res = await request(app)
-      .post('/user/createUser') // The route to createUser function
+      .post('/api/users/createUser') // The route to createUser function
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -31,20 +31,20 @@ describe('User Controller', () => {
     expect(res.body.email).toEqual('john@example.com');
   });
 
-  //   it('should return an error for an existing user', async () => {
-  //     const res = await request(app)
-  //       .post('/user') // The route to addUser controller
-  //       .send({
-  //         firstName: 'John',
-  //         lastName: 'Doe',
-  //         email: 'john@example.com',
-  //         password: 'Password123!',
-  //         profilePic: 'http://example.com/john.jpg',
-  //       });
+  it('should return an error for an existing user', async () => {
+    const res = await request(app)
+      .post('/api/users/createUser') // The route to createUser controller
+      .send({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        password: 'Password123!',
+        profilePic: 'http://example.com/john.jpg',
+      });
 
-  //     expect(res.statusCode).toEqual(400);
-  //     expect(res.body.message).toEqual('User already exists');
-  //   });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('User already exists');
+  });
 
   //   it('should return user information', async () => {
   //     const user = new User({
