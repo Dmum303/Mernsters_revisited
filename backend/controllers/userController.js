@@ -36,7 +36,7 @@ const addUser = asyncHandler(async (req, res) => {
   });
 });
 
-const getMe = asyncHandler(async (req, res) => {
+const getOneUser = asyncHandler(async (req, res) => {
   // Get user ID from req object (replace "userId" with the actual property name)
   const user = await User.findById(req.userId).select('-password');
 
@@ -53,4 +53,4 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
-module.exports = { addUser, getMe, getAllUsers };
+module.exports = { addUser, getOneUser, getAllUsers };

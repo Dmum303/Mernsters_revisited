@@ -4,14 +4,14 @@ var router = express.Router();
 var {
   addUser,
   loginUser,
-  getMe,
+  getOneUser,
   getAllUsers,
 } = require('../controllers/userController');
 
 /* GET users listing. */
 router.post('/', addUser);
 // router.post('/login', loginUser);
-router.post('/me', tokenChecker, getMe);
+router.post('/getOneUser', tokenChecker, getOneUser);
 router.get('/getAllUsers', getAllUsers);
 
 module.exports = router;
