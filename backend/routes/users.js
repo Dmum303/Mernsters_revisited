@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 var {
   createUser,
-  loginUser,
   getOneUser,
   getAllUsers,
 } = require('../controllers/userController');

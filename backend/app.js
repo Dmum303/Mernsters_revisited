@@ -6,6 +6,7 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/loginRouter');
 var messagesRouter = require('./routes/messages');
 var chatsRouter = require('./routes/chats');
 var chatlistRouter = require('./routes/chatlist');
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/chats', chatsRouter);
 app.use('/api/chatlist', chatlistRouter);
