@@ -1,5 +1,4 @@
 require('backend/spec/mongodb_helper');
-// require('simple-mongodb-helper');
 const User = require('../../models/user');
 
 describe('User Model', () => {
