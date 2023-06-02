@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
 
-const addUser = asyncHandler(async (req, res) => {
+const createUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password, profilePic } = req.body;
 
   if (!firstName || !lastName || !email || !password) {
@@ -53,4 +53,4 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
-module.exports = { addUser, getOneUser, getAllUsers };
+module.exports = { createUser, getOneUser, getAllUsers };
