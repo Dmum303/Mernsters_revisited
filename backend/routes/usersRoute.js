@@ -1,4 +1,5 @@
 var tokenChecker = require('../tokenChecker');
+const { protect } = require('../middleware/authMiddleware');
 var express = require('express');
 var router = express.Router();
 var {
@@ -9,7 +10,7 @@ var {
 
 /* GET users listing. */
 router.post('/createUser', createUser);
-router.post('/getOneUser', tokenChecker, getOneUser);
-router.get('/getAllUsers', getAllUsers);
+router.get('/:id', protect, getOneUser);
+router.get('/', protect, getAllUsers);
 
 module.exports = router;

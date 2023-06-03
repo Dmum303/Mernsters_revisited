@@ -24,7 +24,8 @@
     "mongohelper": "^0.0.1",
     "mongoose": "^6.7.3",
     "morgan": "~1.9.1",
-    "simple-mongodb-helper": "^0.6.2"
+    "simple-mongodb-helper": "^0.6.2",
+    "sinon": "^15.1.0"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^4.1.3",
