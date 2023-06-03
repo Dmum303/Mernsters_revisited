@@ -34,29 +34,29 @@ describe('User Controller', () => {
     expect(res.body.message).toEqual('User already exists');
   });
 
-  //   it('should return user information', async () => {
-  //     const user = new User({
-  //       firstName: 'John',
-  //       lastName: 'Doe',
-  //       email: 'john@example.com',
-  //       password: 'Password123',
-  //       profilePic: 'http://example.com/john.jpg',
-  //     });
-
-  //     await user.save();
-
-  //     const res = await request(app).get(`/user/${user.id}`); // The route to getMe controller
-
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.firstName).toEqual('John');
-  //     expect(res.body.email).toEqual('john@example.com');
+  // it('should return user information', async () => {
+  //   const user = new User({
+  //     firstName: 'John',
+  //     lastName: 'Doe',
+  //     email: 'john@example.com',
+  //     password: 'Password123',
+  //     profilePic: 'http://example.com/john.jpg',
   //   });
 
-  //   it('should return all users', async () => {
-  //     const res = await request(app).get('/users'); // The route to getAllUsers controller
+  //   await user.save();
 
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(Array.isArray(res.body)).toBeTruthy();
-  //     expect(res.body.length).toBeGreaterThan(0);
-  //   });
+  //   const res = await request(app).get(`/user/${user.id}`); // The route to getMe controller
+
+  //   expect(res.statusCode).toEqual(200);
+  //   expect(res.body.firstName).toEqual('John');
+  //   expect(res.body.email).toEqual('john@example.com');
+  // });
+
+  // it('should return all users', async () => {
+  //   const res = await request(app).get('/users'); // The route to getAllUsers controller
+
+  //   expect(res.statusCode).toEqual(200);
+  //   expect(Array.isArray(res.body)).toBeTruthy();
+  //   expect(res.body.length).toBeGreaterThan(0);
+  // });
 });
