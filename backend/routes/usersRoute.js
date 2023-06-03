@@ -9,7 +9,6 @@ var {
 
 /* GET users listing. */
 router.post('/createUser', createUser);
-// router.post('/login', loginUser);
 router.post('/getOneUser', tokenChecker, getOneUser);
 router.get('/getAllUsers', getAllUsers);
 

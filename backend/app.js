@@ -5,8 +5,8 @@ var logger = require('morgan');
 var cors = require('cors');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var loginRouter = require('./routes/loginRouter');
+var usersRouter = require('./routes/usersRoute');
+var loginRouter = require('./routes/loginRoute');
 var messagesRouter = require('./routes/messages');
 var chatsRouter = require('./routes/chats');
 var chatlistRouter = require('./routes/chatlist');
