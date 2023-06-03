@@ -1,20 +1,8 @@
 const request = require('supertest');
 const app = require('../../app'); // Your Express app
-// const mongoose = require('mongoose');
 require('backend/spec/mongodb_helper');
 
 describe('User Controller', () => {
-  //   beforeAll(async () => {
-  //     await mongoose.connect('mongodb://localhost/test', {
-  //       useNewUrlParser: true,
-  //       useUnifiedTopology: true,
-  //     });
-  //   });
-
-  //   afterAll(async () => {
-  //     await mongoose.connection.close();
-  //   });
-
   it('should create a new user', async () => {
     const res = await request(app)
       .post('/api/users/createUser') // The route to createUser function
