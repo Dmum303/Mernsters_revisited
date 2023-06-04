@@ -31,14 +31,14 @@ describe('Auth Middleware', () => {
   });
 
   it('should return 401 if no token is provided', async () => {
-    const res = await request.get('/');
+    const res = await request.get('/api/users/');
     expect(res.status).toBe(401);
   });
 
   it('should return 401 if token is invalid', async () => {
     jwtStub.throws();
     const res = await request
-      .get('/')
+      .get('/api/users/')
       .set('Authorization', 'Bearer invalid_token');
     expect(res.status).toBe(401);
   });
@@ -50,7 +50,7 @@ describe('Auth Middleware', () => {
     userStub.returns(Promise.resolve(mockUser));
 
     const res = await request
-      .get('/')
+      .get('/api/users/')
       .set('Authorization', 'Bearer valid_token');
     expect(res.status).toBe(200);
   });
