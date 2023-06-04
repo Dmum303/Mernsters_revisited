@@ -1,59 +1,26 @@
 const mongoose = require('mongoose');
-const Message = require('./message');
-const User = require('./user');
+const Schema = mongoose.Schema;
 
-// the chat model has a array for users in the chat
-// and a array for messages in the chat
-
-const chatSchema = new mongoose.Schema({
-  users: {
-      user1: {
-        user_id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true,
-        },
-        firstName: { type: String, required: true },
-        lastName: { type: String, required: true },
-      },
-      user2: {
-        user_id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true,
-        },
-        firstName: { type: String, required: true },
-        lastName: { type: String, required: true },
-      },
-    },
-  messages: [
+const ChatSchema = new Schema({
+  chat_id: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  participants: [
     {
-      message: {
-        sender: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true,
-        },
-        senderName: { type: String, 
-          required: true 
-        },
-        recipient: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true,
-        },
-        recipientName: { type: String, 
-          required: true 
-        },
-        text: { type: String, required: true },
-        // createdAt: { type: Date, default: Date.now },
-         createdAt: { type: String, default: Date().toLocaleString() },
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
   ],
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-
-
-const Chat = mongoose.model('Chat', chatSchema);
-module.exports = Chat;
+module.exports = mongoose.model('Chat', ChatSchema);
