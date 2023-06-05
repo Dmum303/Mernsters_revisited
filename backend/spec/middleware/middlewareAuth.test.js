@@ -1,60 +1,54 @@
+const request = require('supertest');
 const express = require('express');
-const supertest = require('supertest');
-const sinon = require('sinon');
-const jwt = require('jsonwebtoken');
-const { protect } = require('../../middleware/authMiddleware');
 const User = require('../../models/user');
+const { protect } = require('../../middleware/authMiddleware'); // your middleware
+const jwt = require('jsonwebtoken');
+require('backend/spec/mongodb_helper');
 
-describe('Auth Middleware', () => {
-  let app;
-  let request;
-  let userStub;
-  let jwtStub;
+const app = express();
 
-  beforeAll(() => {
-    app = express();
-    app.use(express.json());
-    app.use(protect);
-    app.get('/', (req, res) => res.status(200).send('Hello, world!'));
+// create a route for testing purpose
+app.get('/testRoute', protect, (req, res) => {
+  res.status(200).json({ success: true });
+});
 
-    request = supertest(app);
-
-    // Set up stubs
-    userStub = sinon.stub(User, 'findById');
-    jwtStub = sinon.stub(jwt, 'verify');
-  });
-
-  afterAll(() => {
-    // Restore original function after tests
-    userStub.restore();
-    jwtStub.restore();
+describe('protect middleware', () => {
+  beforeEach(async () => {
+    // Clear the User collection
+    await User.deleteMany({});
   });
 
   it('should return 401 if no token is provided', async () => {
-    const res = await request.get('/api/users/');
-    expect(res.status).toBe(401);
+    const response = await request(app).get('/testRoute');
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Not authorized, no token');
   });
 
   it('should return 401 if token is invalid', async () => {
-    const consoleSpy = jest.spyOn(console, 'error');
-    jwtStub.throws();
-    const res = await request
-      .get('/api/users/')
-      .set('Authorization', 'Bearer invalid_token');
-    expect(res.status).toBe(401);
-    expect(consoleSpy).toHaveBeenCalled(); // add this
-    consoleSpy.mockRestore(); // and this
+    const response = await request(app)
+      .get('/testRoute')
+      .set('Authorization', 'Bearer invalidToken');
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Not authorized, token failed');
   });
 
   it('should return 200 if token is valid', async () => {
-    const mockUser = { _id: 'valid_user_id', email: 'test@example.com' };
+    // create a test user
+    const user = new User({
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      password: 'Password123!',
+      profilePic: 'http://example.com/john.jpg',
+    });
+    await user.save();
 
-    jwtStub.returns({ id: mockUser._id, iat: Date.now(), exp: Date.now() });
-    userStub.returns(Promise.resolve(mockUser));
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const response = await request(app)
+      .get('/testRoute')
+      .set('Authorization', `Bearer ${token}`);
 
-    const res = await request
-      .get('/api/users/')
-      .set('Authorization', 'Bearer valid_token');
-    expect(res.status).toBe(200);
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
   });
 });

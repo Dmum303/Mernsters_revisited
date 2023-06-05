@@ -1,7 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-require('backend/spec/mongodb_helper');
 
 const protect = asyncHandler(async (req, res, next) => {
   let token;
