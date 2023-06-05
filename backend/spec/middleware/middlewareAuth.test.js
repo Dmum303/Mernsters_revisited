@@ -13,6 +13,11 @@ app.get('/testRoute', protect, (req, res) => {
 });
 
 describe('protect middleware', () => {
+  beforeAll(async () => {
+    // Ensure the indexes are built before running tests
+    await User.init();
+  });
+
   beforeEach(async () => {
     // Clear the User collection
     await User.deleteMany({});
