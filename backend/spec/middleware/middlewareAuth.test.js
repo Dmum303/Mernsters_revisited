@@ -42,13 +42,13 @@ describe('protect middleware', () => {
     const user = new User({
       firstName: 'John',
       lastName: 'Doe',
-      email: 'john@example.com',
+      email: 'john1@example.com',
       password: 'Password123!',
       profilePic: 'http://example.com/john.jpg',
     });
     await user.save();
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const id = user.id;
+    const token = jwt.sign({ id }, process.env.JWT_SECRET);
     const response = await request(app)
       .get('/testRoute')
       .set('Authorization', `Bearer ${token}`);
