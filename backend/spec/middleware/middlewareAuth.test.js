@@ -36,11 +36,14 @@ describe('Auth Middleware', () => {
   });
 
   it('should return 401 if token is invalid', async () => {
+    const consoleSpy = jest.spyOn(console, 'error');
     jwtStub.throws();
     const res = await request
       .get('/api/users/')
       .set('Authorization', 'Bearer invalid_token');
     expect(res.status).toBe(401);
+    expect(consoleSpy).toHaveBeenCalled(); // add this
+    consoleSpy.mockRestore(); // and this
   });
 
   it('should return 200 if token is valid', async () => {

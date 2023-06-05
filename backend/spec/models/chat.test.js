@@ -14,6 +14,10 @@ describe('Chat Model Test', () => {
     userMock = sinon.mock(User);
   });
 
+  beforeEach(async () => {
+    await Chat.deleteMany({});
+  });
+
   afterAll(() => {
     userSave.restore();
     userMock.restore();
