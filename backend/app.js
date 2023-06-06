@@ -10,7 +10,7 @@ var loginRouter = require('./routes/loginRoute');
 var messagesRouter = require('./routes/messages');
 var chatsRouter = require('./routes/chats');
 var chatlistRouter = require('./routes/chatlist');
-var getUsersRouter = require('./routes/getusers');
+
 var app = express();
 
 app.use(cors());
@@ -23,7 +23,6 @@ app.use('/api/login', loginRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/chats', chatsRouter);
 app.use('/api/chatlist', chatlistRouter);
-app.use('/api/getusers', getUsersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
