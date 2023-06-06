@@ -1,4 +1,4 @@
-var tokenChecker = require('../tokenChecker');
+var tokenChecker = require('../tokenChecker'); // this should probs be deleted
 const { protect } = require('../middleware/authMiddleware');
 var express = require('express');
 var router = express.Router();
