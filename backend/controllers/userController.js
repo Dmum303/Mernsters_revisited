@@ -37,8 +37,8 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 const getOneUser = asyncHandler(async (req, res) => {
-  // Get user ID from req object (replace "userId" with the actual property name)
-  const user = await User.findById(req.userId).select('-password');
+  // Get user ID from req.params
+  const user = await User.findById(req.params.id).select('-password');
 
   if (!user) {
     res.status(404).json({ message: 'User not found' });
