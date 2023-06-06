@@ -13,6 +13,9 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
+  console.log('Submitted password:', password);
+  console.log('Stored hashed password:', user.password);
+
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
       _id: user._id,

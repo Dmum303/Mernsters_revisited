@@ -7,6 +7,8 @@ require('backend/spec/mongodb_helper');
 describe('POST /login', () => {
   // This will run before all tests
   beforeAll(async () => {
+    // Ensure the indexes are built before running tests
+    await User.init();
     // Create a new user
     const user = new User({
       firstName: 'Test',
@@ -14,9 +16,10 @@ describe('POST /login', () => {
       email: 'test@mail.com',
       password: 'CorrectPassword1!',
     });
-
     // Save the user to the database
     await user.save();
+    // Add a delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   });
 
   test('Should respond with a 400 status code if request is invalid', async () => {
@@ -41,7 +44,7 @@ describe('POST /login', () => {
     const response = await request(app)
       .post('/api/login/loginUser')
       .send({ email: 'test@mail.com', password: 'CorrectPassword1!' });
-
+    console.log(response.body.message);
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('token');
     expect(response.body).toHaveProperty('email', 'test@mail.com');
